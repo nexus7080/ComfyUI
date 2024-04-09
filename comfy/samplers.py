@@ -336,6 +336,7 @@ def get_mask_aabb(masks):
     return bounding_boxes, is_empty
 
 def resolve_areas_and_cond_masks(conditions, h, w, device):
+    logging.warning(f"resolve_areas_and_cond_masks {conditions} {h} {w}")
     # We need to decide on an area outside the sampling loop in order to properly generate opposite areas of equal sizes.
     # While we're doing this, we can also resolve the mask device and scaling for performance reasons
     for i in range(len(conditions)):
