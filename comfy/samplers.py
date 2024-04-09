@@ -603,6 +603,7 @@ class CFGGuider:
         self.cfg = cfg
 
     def inner_set_conds(self, conds):
+        logging.warning("inner_set_conds", conds)
         for k in conds:
             self.original_conds[k] = comfy.sampler_helpers.convert_cond(conds[k])
 
