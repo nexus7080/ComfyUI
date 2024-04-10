@@ -318,7 +318,7 @@ def get_mask_aabb(masks):
 
     b = masks.shape[0]
 
-    bounding_boxes = torch.zeros((b, 4), device=masks.device, dtype=torch.int)
+    bounding_boxes = torach.zeros((b, 4), device=masks.device, dtype=torch.int)
     is_empty = torch.zeros((b), device=masks.device, dtype=torch.bool)
     for i in range(b):
         mask = masks[i]
@@ -332,7 +332,7 @@ def get_mask_aabb(masks):
         bounding_boxes[i, 1] = torch.min(y)
         bounding_boxes[i, 2] = torch.max(x)
         bounding_boxes[i, 3] = torch.max(y)
-a
+
     return bounding_boxes, is_empty
 
 def resolve_areas_and_cond_masks(conditions, h, w, device):
