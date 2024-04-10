@@ -336,7 +336,7 @@ def get_mask_aabb(masks):
     return bounding_boxes, is_empty
 
 def resolve_areas_and_cond_masks(conditions, h, w, device):
-    logging.warning(f"resolve_areas_and_cond_masks {conditions} {h} {w}")
+    logging.warning(f"*** resolve_areas_and_cond_masks {conditions} {h} {w}")
     # We need to decide on an area outside the sampling loop in order to properly generate opposite areas of equal sizes.
     # While we're doing this, we can also resolve the mask device and scaling for performance reasons
     for i in range(len(conditions)):
@@ -475,7 +475,7 @@ def apply_empty_x_to_equal_area(conds, uncond, name, uncond_fill_func):
             uncond[temp[1]] = n
 
 def encode_model_conds(model_function, conds, noise, device, prompt_type, **kwargs):
-    logging.warning(f"encode_model_conds {conds} {kwargs}")
+    logging.warning(f"*** encode_model_conds {conds} {kwargs}")
     for t in range(len(conds)):
         x = conds[t]
         params = x.copy()
@@ -495,7 +495,7 @@ def encode_model_conds(model_function, conds, noise, device, prompt_type, **kwar
             model_conds[k] = out[k]
         x['model_conds'] = model_conds
         conds[t] = x
-    logging.warning(f"encode_model_conds ----> {conds}")
+    logging.warning(f"*** encode_model_conds ----> {conds}")
     return conds
 
 class Sampler:
@@ -521,6 +521,7 @@ class KSAMPLER(Sampler):
         extra_args["denoise_mask"] = denoise_mask
         model_k = KSamplerX0Inpaint(model_wrap, sigmas)
         model_k.latent_image = latent_image
+        logging.warning(f"*** latent_image {latent_image}")
         if self.inpaint_options.get("random", False): #TODO: Should this be the default?
             generator = torch.manual_seed(extra_args.get("seed", 41) + 1)
             model_k.noise = torch.randn(noise.shape, generator=generator, device="cpu").to(noise.dtype).to(noise.device)
@@ -606,7 +607,7 @@ class CFGGuider:
         self.cfg = cfg
 
     def inner_set_conds(self, conds):
-        logging.warning(f"inner_set_conds {conds}")
+        logging.warning(f"*** inner_set_conds {conds}")
         for k in conds:
             self.original_conds[k] = comfy.sampler_helpers.convert_cond(conds[k])
 
