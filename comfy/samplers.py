@@ -475,6 +475,7 @@ def apply_empty_x_to_equal_area(conds, uncond, name, uncond_fill_func):
             uncond[temp[1]] = n
 
 def encode_model_conds(model_function, conds, noise, device, prompt_type, **kwargs):
+    logging.warning(f"encode_model_conds {conds} {noise}")
     for t in range(len(conds)):
         x = conds[t]
         params = x.copy()
@@ -494,6 +495,7 @@ def encode_model_conds(model_function, conds, noise, device, prompt_type, **kwar
             model_conds[k] = out[k]
         x['model_conds'] = model_conds
         conds[t] = x
+    logging.warning(f"encode_model_conds ----> {conds}")
     return conds
 
 class Sampler:

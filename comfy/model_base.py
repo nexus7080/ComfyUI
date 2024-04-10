@@ -109,6 +109,7 @@ class BaseModel(torch.nn.Module):
     def extra_conds(self, **kwargs):
         out = {}
         if len(self.concat_keys) > 0:
+            logging.warning(f"extra_conds A {self.concat_keys}")
             cond_concat = []
             denoise_mask = kwargs.get("concat_mask", kwargs.get("denoise_mask", None))
             concat_latent_image = kwargs.get("concat_latent_image", None)
