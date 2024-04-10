@@ -129,6 +129,7 @@ def cond_cat(c_list):
     return out
 
 def calc_cond_batch(model, conds, x_in, timestep, model_options):
+    logging.warning(f"*** calc_cond_batch {conds} {timestep} {model_options}")
     out_conds = []
     out_counts = []
     to_run = []
@@ -225,6 +226,7 @@ def calc_cond_batch(model, conds, x_in, timestep, model_options):
     for i in range(len(out_conds)):
         out_conds[i] /= out_counts[i]
 
+    logging.warning(f"*** calc_cond_batch ----> {out_conds}")
     return out_conds
 
 def calc_cond_uncond_batch(model, cond, uncond, x_in, timestep, model_options): #TODO: remove
