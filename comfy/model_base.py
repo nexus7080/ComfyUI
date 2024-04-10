@@ -107,6 +107,7 @@ class BaseModel(torch.nn.Module):
         return None
 
     def extra_conds(self, **kwargs):
+        logging.warning(f"extra_conds {kwargs}")
         out = {}
         if len(self.concat_keys) > 0:
             logging.warning(f"extra_conds A {self.concat_keys}")

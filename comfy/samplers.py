@@ -332,7 +332,7 @@ def get_mask_aabb(masks):
         bounding_boxes[i, 1] = torch.min(y)
         bounding_boxes[i, 2] = torch.max(x)
         bounding_boxes[i, 3] = torch.max(y)
-
+a
     return bounding_boxes, is_empty
 
 def resolve_areas_and_cond_masks(conditions, h, w, device):
@@ -475,7 +475,7 @@ def apply_empty_x_to_equal_area(conds, uncond, name, uncond_fill_func):
             uncond[temp[1]] = n
 
 def encode_model_conds(model_function, conds, noise, device, prompt_type, **kwargs):
-    logging.warning(f"encode_model_conds {conds} {noise} {kwargs}")
+    logging.warning(f"encode_model_conds {conds} {kwargs}")
     for t in range(len(conds)):
         x = conds[t]
         params = x.copy()
