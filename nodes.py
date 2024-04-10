@@ -36,6 +36,8 @@ import folder_paths
 import latent_preview
 import node_helpers
 
+torch.set_printoptions(threshold=5)
+
 def before_node_execution():
     comfy.model_management.throw_exception_if_processing_interrupted()
 
