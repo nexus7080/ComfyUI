@@ -50,6 +50,8 @@ class BaseModel(torch.nn.Module):
         super().__init__()
 
         unet_config = model_config.unet_config
+        # logging.warning(f"*** BaseModel.___init__ unet_config={unet_config} model_config={model_config}")
+        # exit()
         self.latent_format = model_config.latent_format
         self.model_config = model_config
         self.manual_cast_dtype = model_config.manual_cast_dtype
@@ -94,7 +96,40 @@ class BaseModel(torch.nn.Module):
                     extra = extra.to(dtype)
             extra_conds[o] = extra
 
-        model_output = self.diffusion_model(xc, t, context=context, control=control, transformer_options=transformer_options, **extra_conds).float()
+        # logging.warning(f"*** BaseModel.apply_model xc={xc} t={t} context={context} transformer_options={transformer_options} extra_conds={extra_conds}")
+        # exit()
+        #
+        # import safetensors.torch
+        # def state_dict_prefix_replace(state_dict, replace_prefix, filter_keys=False):
+        #     if filter_keys:
+        #         out = {}
+        #     else:
+        #         out = state_dict
+        #     for rp in replace_prefix:
+        #         replace = list(map(lambda a: (a, "{}{}".format(replace_prefix[rp], a[len(rp):])), filter(lambda a: a.startswith(rp), state_dict.keys())))
+        #         for x in replace:
+        #             w = state_dict.pop(x[0])
+        #             out[x[1]] = w
+        #     return out
+        # diffusion_model = UNetModel(**self.model_config.unet_config, device="cpu", operations=comfy.ops.disable_weight_init)
+        # sd = safetensors.torch.load_file('./models/checkpoints/v1-5-pruned-emaonly.safetensors', 'cpu')
+        # unet_sd = state_dict_prefix_replace(sd, {k: "" for k in ["model.diffusion_model."]}, filter_keys=True)
+        # # for k in unet_sd.keys():
+        # #     print(k)
+        # m, u = diffusion_model.load_state_dict(unet_sd, strict=False)
+        # if len(m) > 0:
+        #     logging.warning("unet missing: {}".format(m))
+        # if len(u) > 0:
+        #     logging.warning("unet unexpected: {}".format(u))
+        # #validate_state_dicts(diffusion_model.state_dict(), self.diffusion_model.state_dict())
+        # #exit()
+        # self.diffusion_model = diffusion_model
+        #
+        model_output = self.diffusion_model(xc, t, context=context, control=control, 
+        transformer_options=transformer_options, **extra_conds).float()
+        # logging.warning(f"*** BaseModel.apply_model model_output={model_output} output.shape={model_output.shape}")
+        # # logging.warning(f"BaseModel.apply_model sigma={sigma} x={x}")
+        # exit()
         return self.model_sampling.calculate_denoised(sigma, model_output, x)
 
     def get_dtype(self):
@@ -107,7 +142,7 @@ class BaseModel(torch.nn.Module):
         return None
 
     def extra_conds(self, **kwargs):
-        logging.warning(f"*** extra_conds {kwargs} {self.concat_keys}")
+        #logging.warning(f"*** extra_conds {kwargs} {self.concat_keys}")
         out = {}
         if len(self.concat_keys) > 0:
             cond_concat = []
@@ -135,6 +170,10 @@ class BaseModel(torch.nn.Module):
                     denoise_mask = utils.common_upscale(denoise_mask, noise.shape[-1], noise.shape[-2], "bilinear", "center")
                 denoise_mask = utils.resize_to_batch_size(denoise_mask.round(), noise.shape[0])
 
+            # print(denoise_mask)
+            # print(concat_latent_image)
+            # exit()
+
             for ck in self.concat_keys:
                 if denoise_mask is not None:
                     if ck == "mask":
@@ -147,6 +186,8 @@ class BaseModel(torch.nn.Module):
                     elif ck == "masked_image":
                         cond_concat.append(self.blank_inpaint_image_like(noise))
             data = torch.cat(cond_concat, dim=1)
+            print(cond_concat)
+            exit()
             out['c_concat'] = comfy.conds.CONDNoiseShape(data)
 
         adm = self.encode_adm(**kwargs)
@@ -228,6 +269,7 @@ class BaseModel(torch.nn.Module):
             #blank_image[:,1] = blank_image[:,1] * 0.1380
             #print(blank_image[:,3] * 0.1380)
             logging.warning(blank_image)
+            logging.warning(f"{latent_image.device}")
             #torch.save(blank_image, 'uuuu.pt')
             exit()
             return blank_image
