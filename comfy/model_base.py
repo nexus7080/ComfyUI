@@ -216,12 +216,20 @@ class BaseModel(torch.nn.Module):
     def set_inpaint(self):
         self.concat_keys = ("mask", "masked_image")
         def blank_inpaint_image_like(latent_image):
+            latent_image = torch.ones(1, 4, 64, 64)
+            #torch.ones(input.size(), dtype=input.dtype, layout=input.layout, device=input.device)
+            #blank_image = torch.ones(latent_image.size(), layout=latent_image.layout, dtype=latent_image.dtype, device="mps")
             blank_image = torch.ones_like(latent_image)
             # these are the values for "zero" in pixel space translated to latent space
             blank_image[:,0] *= 0.8223
             blank_image[:,1] *= -0.6876
             blank_image[:,2] *= 0.6364
             blank_image[:,3] *= 0.1380
+            #blank_image[:,1] = blank_image[:,1] * 0.1380
+            #print(blank_image[:,3] * 0.1380)
+            logging.warning(blank_image)
+            #torch.save(blank_image, 'uuuu.pt')
+            exit()
             return blank_image
         self.blank_inpaint_image_like = blank_inpaint_image_like
 
