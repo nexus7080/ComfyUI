@@ -259,7 +259,7 @@ class BaseModel(torch.nn.Module):
         def blank_inpaint_image_like(latent_image):
             latent_image = torch.ones(1, 4, 64, 64)
             #torch.ones(input.size(), dtype=input.dtype, layout=input.layout, device=input.device)
-            #blank_image = torch.ones(latent_image.size(), layout=latent_image.layout, dtype=latent_image.dtype, device="mps")
+            blank_image = torch.ones(latent_image.size(), layout=latent_image.layout, dtype=latent_image.dtype, device="cuda")
             blank_image = torch.ones_like(latent_image)
             # these are the values for "zero" in pixel space translated to latent space
             blank_image[:,0] *= 0.8223
